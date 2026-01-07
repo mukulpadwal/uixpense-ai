@@ -1,0 +1,16 @@
+{
+  "name": "uixpense-ai-server",
+  "version": "1.0.0",
+  "description": "Uixpense AI Server",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "Mukul Padwal <mukulpadwal.me@gmail.com>",
+  "license": "ISC",
+  "packageManager": "pnpm@10.26.0"
+}
