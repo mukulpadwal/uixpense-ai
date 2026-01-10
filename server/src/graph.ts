@@ -1,4 +1,8 @@
-import { MessagesAnnotation, StateGraph } from "@langchain/langgraph";
+import {
+  MemorySaver,
+  MessagesAnnotation,
+  StateGraph,
+} from "@langchain/langgraph";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
 import initDB from "./db.ts";
 import initTools from "./tools.ts";
@@ -21,7 +25,7 @@ const callModel = async (state: typeof MessagesAnnotation.State) => {
         Current DateTime information: ${new Date().toISOString()}
 
         The user can use the following tools:
-        ${tools.map((tool) => tool.name).join(", ")}
+        - add_expense: Use this tool to add new expense by user. Using the content deduce the category and description yourself to send as a parameter to the tool.
       `,
     },
     ...state.messages,
@@ -49,3 +53,7 @@ const graph = new StateGraph(MessagesAnnotation)
     __end__: "__end__",
     toolNode: "toolNode",
   });
+
+export const workflow = graph.compile({
+  checkpointer: new MemorySaver(),
+});

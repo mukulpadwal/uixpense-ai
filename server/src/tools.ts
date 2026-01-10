@@ -5,17 +5,25 @@ import { tool } from "langchain";
 const initTools = (database: DatabaseSync) => {
   const addExpense = tool(
     ({ title, amount, category, description }) => {
-      console.log({
-        title,
-        amount,
-        category,
-        description,
-      });
+      const date = new Date().toISOString().split("T")[0];
 
-      return JSON.stringify({
-        success: true,
-        message: "Expense added successfully",
-      });
+      try {
+        const statement = database.prepare(`
+          INSERT INTO expenses (title, amount, category, description, date) VALUES (?, ?, ?, ?, ?);
+        `);
+
+        statement.run(title, amount, category, description, date);
+
+        return JSON.stringify({
+          success: true,
+          message: "Expense added successfully",
+        });
+      } catch (error) {
+        return JSON.stringify({
+          success: false,
+          message: "Failed to add expense",
+        });
+      }
     },
     {
       name: "add_expense",
