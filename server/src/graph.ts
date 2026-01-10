@@ -26,6 +26,7 @@ const callModel = async (state: typeof MessagesAnnotation.State) => {
 
         The user can use the following tools:
         - add_expense: Use this tool to add new expense by user. Using the content deduce the category and description yourself to send as a parameter to the tool.
+        - get_expenses: Use this tool to get all expenses from the database for a given date range. If no explicit date range is provided, try to deduce it from the context else use the last 7 days as default.
       `,
     },
     ...state.messages,
@@ -39,19 +40,26 @@ const callModelRouter = (state: typeof MessagesAnnotation.State) => {
   const lastMessage = messages.at(-1) as AIMessage;
 
   if (lastMessage.tool_calls?.length) {
-    return "toolNode";
+    return "tools";
   }
 
   return "__end__";
 };
 
+const toolsRouter = (state: typeof MessagesAnnotation.State) => {
+  return "callModel";
+};
+
 const graph = new StateGraph(MessagesAnnotation)
   .addNode("callModel", callModel)
-  .addNode("toolNode", toolNode)
+  .addNode("tools", toolNode)
   .addEdge("__start__", "callModel")
   .addConditionalEdges("callModel", callModelRouter, {
     __end__: "__end__",
-    toolNode: "toolNode",
+    tools: "tools",
+  })
+  .addConditionalEdges("tools", toolsRouter, {
+    callModel: "callModel",
   });
 
 export const workflow = graph.compile({

@@ -6,7 +6,7 @@ const main = async () => {
       messages: [
         {
           role: "user",
-          content: "I bought an macBook worth 200000 INR.",
+          content: "How much have I spent in total?",
         },
       ],
     },

@@ -37,7 +37,38 @@ const initTools = (database: DatabaseSync) => {
     },
   );
 
-  return [addExpense];
+  const getExpenses = tool(
+    ({ from, to }) => {
+      try {
+        const statement = database.prepare(`
+          SELECT * FROM expenses WHERE date BETWEEN ? AND ?;
+        `);
+
+        const expenses = statement.all(from, to);
+
+        return JSON.stringify({
+          success: true,
+          expenses,
+        });
+      } catch (error) {
+        return JSON.stringify({
+          success: false,
+          message: "Failed to get expenses",
+        });
+      }
+    },
+    {
+      name: "get_expenses",
+      description:
+        "Tool to get all expenses from the database for a given date range.",
+      schema: z.object({
+        from: z.string().describe("From date in YYYY-MM-DD format"),
+        to: z.string().describe("To date in YYYY-MM-DD format"),
+      }),
+    },
+  );
+
+  return [addExpense, getExpenses];
 };
 
 export default initTools;
