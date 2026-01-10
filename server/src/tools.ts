@@ -71,8 +71,8 @@ const initTools = (database: DatabaseSync) => {
   const generateExpenseChart = tool(
     ({ from, to, groupBy }) => {
       const formatMap = {
-        day: "%Y-%m-%d",
-        week: "%Y-%W",
+        date: "%Y-%m-%d",
+        week: "%Y-W%W",
         month: "%Y-%m",
         year: "%Y",
       };
@@ -90,9 +90,15 @@ const initTools = (database: DatabaseSync) => {
 
         const rows = statement.all(from, to);
 
+        const result = rows.map((row) => ({
+          [groupBy]: row.period,
+          amount: row.total,
+        }));
+
         return JSON.stringify({
           success: true,
-          rows,
+          result,
+          type: "chartData",
         });
       } catch (error) {
         return JSON.stringify({
@@ -104,13 +110,13 @@ const initTools = (database: DatabaseSync) => {
     {
       name: "generate_expense_chart",
       description:
-        "Tool to generate an expense chart for a given date range grouped by day, week, month or year.",
+        "Tool to generate an expense chart for a given date range grouped by date, week, month or year.",
       schema: z.object({
         from: z.string().describe("From date in YYYY-MM-DD format"),
         to: z.string().describe("To date in YYYY-MM-DD format"),
         groupBy: z
-          .enum(["day", "week", "month", "year"])
-          .describe("Group by day, week, month or year"),
+          .enum(["date", "week", "month", "year"])
+          .describe("Group by date, week, month or year"),
       }),
     },
   );
