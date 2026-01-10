@@ -68,7 +68,54 @@ const initTools = (database: DatabaseSync) => {
     },
   );
 
-  return [addExpense, getExpenses];
+  const generateExpenseChart = tool(
+    ({ from, to, groupBy }) => {
+      const formatMap = {
+        day: "%Y-%m-%d",
+        week: "%Y-%W",
+        month: "%Y-%m",
+        year: "%Y",
+      };
+
+      try {
+        const format = formatMap[groupBy];
+
+        const statement = database.prepare(`
+          SELECT strftime('${format}', date) as period, SUM(amount) as total
+          FROM expenses
+          WHERE date BETWEEN ? AND ?
+          GROUP BY period
+          ORDER BY period;  
+        `);
+
+        const rows = statement.all(from, to);
+
+        return JSON.stringify({
+          success: true,
+          rows,
+        });
+      } catch (error) {
+        return JSON.stringify({
+          success: false,
+          message: "Failed to generate expense chart",
+        });
+      }
+    },
+    {
+      name: "generate_expense_chart",
+      description:
+        "Tool to generate an expense chart for a given date range grouped by day, week, month or year.",
+      schema: z.object({
+        from: z.string().describe("From date in YYYY-MM-DD format"),
+        to: z.string().describe("To date in YYYY-MM-DD format"),
+        groupBy: z
+          .enum(["day", "week", "month", "year"])
+          .describe("Group by day, week, month or year"),
+      }),
+    },
+  );
+
+  return [addExpense, getExpenses, generateExpenseChart];
 };
 
 export default initTools;

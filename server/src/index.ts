@@ -6,7 +6,7 @@ const main = async () => {
       messages: [
         {
           role: "user",
-          content: "How much have I spent in total?",
+          content: "Can yu help me visualize how much have I spent group by month?",
         },
       ],
     },

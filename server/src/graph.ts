@@ -27,6 +27,7 @@ const callModel = async (state: typeof MessagesAnnotation.State) => {
         The user can use the following tools:
         - add_expense: Use this tool to add new expense by user. Using the content deduce the category and description yourself to send as a parameter to the tool.
         - get_expenses: Use this tool to get all expenses from the database for a given date range. If no explicit date range is provided, try to deduce it from the context else use the last 7 days as default.
+        - generate_expense_chart: Use this tool to help the user visualize the expenses data for a given date range grouped by day, week, month or year. If groupBy value is not explicitly mentioned by the user use month by default
       `,
     },
     ...state.messages,
