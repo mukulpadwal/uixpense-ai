@@ -1,7 +1,11 @@
 import { Outlet } from "react-router";
 
 function PublicLayout() {
-  return <Outlet />;
+  return (
+    <main className="relative min-h-screen">
+      <Outlet />
+    </main>
+  );
 }
 
 export default PublicLayout;

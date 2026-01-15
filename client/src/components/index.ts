@@ -5,4 +5,11 @@ import Footer from "./footer";
 import Hero from "./hero";
 import NavBar from "./navbar";
 
-export { ChatInterface, CTA, Features, Hero, NavBar, Footer };
+export {
+  ChatInterface,
+  CTA,
+  Features,
+  Hero,
+  NavBar,
+  Footer,
+};
