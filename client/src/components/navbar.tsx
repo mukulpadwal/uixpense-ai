@@ -1,4 +1,5 @@
 import { HandCoins } from "lucide-react";
+import { NavLink } from "react-router";
 
 function NavBar() {
   return (
@@ -14,7 +15,7 @@ function NavBar() {
         </div>
 
         <div className="flex justify-center">
-          <a href="/chat">
+          <NavLink to="/chat">
             <button className="glow-btn cursor-pointer border-none inline-flex focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 transition-all duration-300 text-sm font-medium tracking-wide rounded-none pt-1 pr-5 pb-1 pl-5 relative items-center justify-center group text-foreground bg-black">
               {/* Glow Effects */}
               <div className="glow-btn-overlay" />
@@ -24,7 +25,7 @@ function NavBar() {
                 CHAT
               </span>
             </button>
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>

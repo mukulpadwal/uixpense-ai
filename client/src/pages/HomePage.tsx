@@ -1,6 +1,6 @@
-import { CTA, Features, Footer, Hero, NavBar } from "./components";
+import { CTA, Features, Footer, Hero, NavBar } from "@/components";
 
-function App() {
+function HomePage() {
   return (
     <main className="relative min-h-screen">
       <NavBar />
@@ -12,4 +12,4 @@ function App() {
   );
 }
 
-export default App;
+export default HomePage;

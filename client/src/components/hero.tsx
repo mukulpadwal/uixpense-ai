@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import ChatInterface from "./chat-interface";
+import { NavLink } from "react-router";
 
 function Hero() {
   return (
@@ -36,7 +37,7 @@ function Hero() {
 
         {/* CTA Button */}
         <div className="flex justify-center mb-20">
-          <a href="/chat">
+          <NavLink to="/chat">
             <button
               className="glow-btn cursor-pointer border-none inline-flex focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 transition-all duration-300 text-sm font-medium tracking-wide rounded-none pt-4 pr-10 pb-4 pl-10 relative items-center justify-center group text-foreground bg-black"
               style={{ width: "auto" }}
@@ -80,7 +81,7 @@ function Hero() {
                 <ArrowRight className="w-4 h-4" />
               </span>
             </button>
-          </a>
+          </NavLink>
         </div>
 
         {/* Chat Interface Mockup */}
