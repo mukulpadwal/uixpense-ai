@@ -2,6 +2,7 @@ import type React from "react";
 import { Link } from "react-router";
 import { useState, useRef, useEffect } from "react";
 import { Send, ArrowLeft } from "lucide-react";
+import { fetchEventSource } from "@microsoft/fetch-event-source";
 
 interface Message {
   id: string;
@@ -23,6 +24,25 @@ export default function ChatPage() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    async function sendMessage() {
+      await fetchEventSource("http://localhost:8080/chat", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ userQuery: input }),
+
+        onmessage(event) {
+          console.log("eventName", event.event);
+          console.log("eventData", event.data);
+        },
+      });
+    }
+
+    sendMessage();
+  }, []);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
