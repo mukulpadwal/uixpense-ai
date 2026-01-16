@@ -1,6 +1,7 @@
 import express from "express";
 import type { Request, Response } from "express";
 import cors from "cors";
+import { workflow } from "./graph.ts";
 
 const app = express();
 app.use(express.json());
@@ -8,18 +9,41 @@ app.use(cors());
 
 const PORT = process.env.PORT || 8080;
 
-app.post("/chat", (req: Request, res: Response) => {
+app.post("/chat", async (req: Request, res: Response) => {
+  const { userQuery } = req.body;
+
   // 1. Set Special Headers
   res.writeHead(200, {
     "content-type": "text/event-stream",
   });
 
-  // 2. Send data in special format
-  setInterval(() => {
-    res.write("event: ping\n");
-    res.write("data: Pong");
+  const response = await workflow.stream(
+    {
+      messages: [
+        {
+          role: "user",
+          content: userQuery,
+        },
+      ],
+    },
+    {
+      configurable: {
+        thread_id: "1",
+      },
+      streamMode: ["messages"],
+    },
+  );
+
+  for await (const [eventType, chunk] of response) {
+    const message = { type: "ai", message: chunk[0].content };
+
+    // 2. Send data in special format
+    res.write(`event: ${eventType}\n`);
+    res.write(`data: ${JSON.stringify(message)}`);
     res.write("\n\n");
-  }, 1000);
+  }
+
+  res.end();
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

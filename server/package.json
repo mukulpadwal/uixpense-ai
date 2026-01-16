@@ -2,10 +2,10 @@
   "name": "uixpense-ai-server",
   "version": "1.0.0",
   "description": "Uixpense AI Server",
-  "main": "dist/index.js",
+  "main": "dist/server.js",
   "type": "module",
   "scripts": {
-    "dev": "node --watch src/server.ts",
+    "dev": "node --env-file=.env.local --watch src/server.ts",
     "start": "node dist/server.js",
     "build": "tsc"
   },
