@@ -12,8 +12,8 @@ interface Message {
 }
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -25,108 +25,32 @@ export default function ChatPage() {
     scrollToBottom();
   }, [messages]);
 
-  useEffect(() => {
-    async function sendMessage() {
-      await fetchEventSource("http://localhost:8080/chat", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({ userQuery: input }),
+  async function sendMessage(userQuery: string) {
+    await fetchEventSource("http://localhost:8080/chat", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ userQuery }),
 
-        onmessage(event) {
-          console.log("eventName", event.event);
-          console.log("eventData", event.data);
-        },
-      });
-    }
-
-    sendMessage();
-  }, []);
+      onmessage(event) {
+        console.log("eventName", event.event);
+        console.log("eventData", event.data);
+      },
+    });
+  }
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: "user",
-      content: input,
-      timestamp: new Date(),
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
-      });
-
-      if (!response.ok) throw new Error("Failed to fetch");
-
-      if (response.headers.get("content-type")?.includes("text/event-stream")) {
-        const reader = response.body?.getReader();
-        const decoder = new TextDecoder();
-
-        let assistantContent = "";
-        const assistantMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: "assistant",
-          content: assistantContent,
-          timestamp: new Date(),
-        };
-
-        setMessages((prev) => [...prev, assistantMessage]);
-
-        if (reader) {
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            const chunk = decoder.decode(value);
-            const lines = chunk.split("\n");
-
-            for (const line of lines) {
-              if (line.startsWith("data: ")) {
-                try {
-                  const data = JSON.parse(line.slice(6));
-                  if (data.content) {
-                    assistantContent += data.content;
-                    setMessages((prev) => [
-                      ...prev.slice(0, -1),
-                      { ...assistantMessage, content: assistantContent },
-                    ]);
-                  }
-                } catch (e) {
-                  // Skip invalid JSON
-                }
-              }
-            }
-          }
-        }
-      } else {
-        const data = await response.json();
-        const assistantMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: "assistant",
-          content: data.message || data.content || "No response",
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, assistantMessage]);
-      }
+      sendMessage(input);
     } catch (error) {
       console.error("Chat error:", error);
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: "Sorry, something went wrong. Please try again.",
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
