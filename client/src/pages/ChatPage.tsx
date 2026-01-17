@@ -3,17 +3,12 @@ import { Link } from "react-router";
 import { useState, useRef, useEffect } from "react";
 import { Send, ArrowLeft } from "lucide-react";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
-
-interface Message {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-  timestamp: Date;
-}
+import type { StreamMessage } from "@/types";
+import { ChatMessage } from "@/components";
 
 export default function ChatPage() {
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<StreamMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -34,8 +29,35 @@ export default function ChatPage() {
       body: JSON.stringify({ userQuery }),
 
       onmessage(event) {
-        console.log("eventName", event.event);
-        console.log("eventData", event.data);
+        const parsedData = JSON.parse(event.data) as StreamMessage;
+
+        if (parsedData.type === "ai") {
+          setMessages((prevMessages) => {
+            const lastMessage = prevMessages.at(-1);
+
+            if (lastMessage && lastMessage.type === "ai") {
+              const clonedMessages = [...prevMessages];
+
+              clonedMessages[clonedMessages.length - 1] = {
+                ...lastMessage,
+                payload: {
+                  text: lastMessage.payload.text + parsedData.payload.text,
+                },
+              };
+
+              return clonedMessages;
+            } else {
+              return [
+                ...prevMessages,
+                {
+                  id: Date.now().toString(),
+                  type: "ai",
+                  payload: parsedData.payload,
+                },
+              ];
+            }
+          });
+        }
       },
     });
   }
@@ -44,13 +66,33 @@ export default function ChatPage() {
     e.preventDefault();
     if (!input.trim()) return;
 
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      {
+        id: Date.now().toString(),
+        type: "user",
+        payload: {
+          text: input,
+        },
+      },
+    ]);
+
     setInput("");
     setIsLoading(true);
 
     try {
       sendMessage(input);
     } catch (error) {
-      console.error("Chat error:", error);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          id: Date.now().toString(),
+          type: "ai",
+          payload: {
+            text: "Something went wrong. Please try again later.",
+          },
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -103,30 +145,7 @@ export default function ChatPage() {
             </div>
           ) : (
             messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${
-                  message.role === "user" ? "justify-end" : "justify-start"
-                }`}
-              >
-                <div
-                  className={`max-w-xs sm:max-w-md lg:max-w-2xl px-6 py-4 rounded-2xl border backdrop-blur-sm ${
-                    message.role === "user"
-                      ? "bg-orange-600 text-white border-orange-500/40 rounded-tr-sm"
-                      : "bg-white/10 text-stone-100 border-white/15 rounded-tl-sm"
-                  }`}
-                >
-                  <p className="text-sm sm:text-base leading-relaxed">
-                    {message.content}
-                  </p>
-                  <p className="text-xs mt-3 opacity-70">
-                    {message.timestamp.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
-                </div>
-              </div>
+              <ChatMessage key={message.id} message={message} />
             ))
           )}
 
