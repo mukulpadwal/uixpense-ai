@@ -57,6 +57,15 @@ export default function ChatPage() {
               ];
             }
           });
+        } else if (parsedData.type === "toolCall:start") {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              id: Date.now().toString(),
+              type: "toolCall:start",
+              payload: parsedData.payload,
+            },
+          ]);
         }
       },
     });
