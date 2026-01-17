@@ -2,6 +2,7 @@ import express from "express";
 import type { Request, Response } from "express";
 import cors from "cors";
 import { workflow } from "./graph.ts";
+import type { StreamMessage } from "./types.ts";
 
 const app = express();
 app.use(express.json());
@@ -35,7 +36,18 @@ app.post("/chat", async (req: Request, res: Response) => {
   );
 
   for await (const [eventType, chunk] of response) {
-    const message = { type: "ai", message: chunk[0].content };
+    let message: StreamMessage = {} as StreamMessage;
+
+    const messageType = chunk[0].type;
+
+    if (messageType === "ai") {
+      message = {
+        type: "ai",
+        payload: {
+          text: chunk[0].content as string,
+        },
+      };
+    }
 
     // 2. Send data in special format
     res.write(`event: ${eventType}\n`);
