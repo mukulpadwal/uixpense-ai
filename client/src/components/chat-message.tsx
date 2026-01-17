@@ -1,5 +1,6 @@
 import { Terminal, User, HandCoins } from "lucide-react";
-import type { StreamMessage } from "@/types";
+import type { ChartData, StreamMessage } from "@/types";
+import ExpenseChart from "./expense-chart";
 
 function ChatMessage({ message }: { message: StreamMessage }) {
   if (message.type === "user") {
@@ -78,7 +79,7 @@ function ChatMessage({ message }: { message: StreamMessage }) {
 
   if (message.type === "tool") {
     return (
-      <div className="flex justify-start my-2 px-12">
+      <div className="flex flex-col justify-start my-2 px-12">
         <div className="flex items-start gap-3 px-4 py-3 rounded-xl border bg-stone-900/40 border-white/5 backdrop-blur-md max-w-2xl group transition-all hover:border-white/10 animate-in fade-in slide-in-from-left-2 duration-300">
           <div className="shrink-0 mt-1">
             <div className="p-1.5 rounded-md bg-stone-800/80 border border-white/10">
@@ -102,6 +103,14 @@ function ChatMessage({ message }: { message: StreamMessage }) {
               </div>
             )}
           </div>
+        </div>
+        <div>
+          {message.payload.name === "generate_expense_chart" && (
+            <ExpenseChart
+              chartData={message.payload.result?.chartData as ChartData[]}
+              labelKey={message.payload.result?.labelKey as string}
+            />
+          )}
         </div>
       </div>
     );

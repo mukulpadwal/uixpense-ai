@@ -29,3 +29,7 @@ export type StreamMessage =
         result: Record<string, unknown>;
       };
     };
+
+export type ChartData = {
+  [key: string]: string | number;
+};
