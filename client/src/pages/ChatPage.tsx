@@ -66,6 +66,15 @@ export default function ChatPage() {
               payload: parsedData.payload,
             },
           ]);
+        } else if (parsedData.type === "tool") {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              id: Date.now().toString(),
+              type: "tool",
+              payload: parsedData.payload,
+            },
+          ]);
         }
       },
     });
