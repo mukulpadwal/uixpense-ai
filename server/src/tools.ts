@@ -97,8 +97,9 @@ const initTools = (database: DatabaseSync) => {
 
         return JSON.stringify({
           success: true,
-          result,
+          chartData: result,
           type: "chartData",
+          labelKey: groupBy,
         });
       } catch (error) {
         return JSON.stringify({
