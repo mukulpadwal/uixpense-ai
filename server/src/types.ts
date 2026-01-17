@@ -9,7 +9,7 @@ export type StreamMessage =
       type: "toolCall:start";
       payload: {
         name: string;
-        arguments: Record<string, unknown>;
+        args: Record<string, unknown>;
       };
     }
   | {

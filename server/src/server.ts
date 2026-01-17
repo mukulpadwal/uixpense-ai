@@ -31,22 +31,28 @@ app.post("/chat", async (req: Request, res: Response) => {
       configurable: {
         thread_id: "1",
       },
-      streamMode: ["messages"],
+      streamMode: ["messages", "custom"],
     },
   );
 
   for await (const [eventType, chunk] of response) {
     let message: StreamMessage = {} as StreamMessage;
 
-    const messageType = chunk[0].type;
+    if (eventType === "custom") {
+      message = chunk;
+    } else if (eventType === "messages") {
+      if (chunk[0].content === "") continue;
 
-    if (messageType === "ai") {
-      message = {
-        type: "ai",
-        payload: {
-          text: chunk[0].content as string,
-        },
-      };
+      const messageType = chunk[0].type;
+
+      if (messageType === "ai") {
+        message = {
+          type: "ai",
+          payload: {
+            text: chunk[0].content as string,
+          },
+        };
+      }
     }
 
     // 2. Send data in special format

@@ -3,11 +3,13 @@ import {
   MessagesAnnotation,
   StateGraph,
 } from "@langchain/langgraph";
+import type { LangGraphRunnableConfig } from "@langchain/langgraph";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
 import initDB from "./db.ts";
 import initTools from "./tools.ts";
 import llm from "./llm.ts";
 import { AIMessage, ToolMessage } from "langchain";
+import type { StreamMessage } from "./types.ts";
 
 const database = initDB("./expenses.db");
 const tools = initTools(database);
@@ -36,11 +38,25 @@ const callModel = async (state: typeof MessagesAnnotation.State) => {
   return { messages: [response] };
 };
 
-const callModelRouter = (state: typeof MessagesAnnotation.State) => {
+const callModelRouter = (
+  state: typeof MessagesAnnotation.State,
+  config: LangGraphRunnableConfig,
+) => {
   const messages = state.messages;
   const lastMessage = messages.at(-1) as AIMessage;
 
   if (lastMessage.tool_calls?.length) {
+    // Stream custom event to notify toolCall:start
+    const message: StreamMessage = {
+      type: "toolCall:start",
+      payload: {
+        name: lastMessage.tool_calls[0].name,
+        args: lastMessage.tool_calls[0].args,
+      },
+    };
+
+    config.writer?.(message);
+
     return "tools";
   }
 
