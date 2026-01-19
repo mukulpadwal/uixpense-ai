@@ -10,7 +10,7 @@ function NavBar() {
             <HandCoins className="h-5 w-5" />
           </div>
           <span className="text-sm font-semibold tracking-wide text-foreground">
-            uiXpense<span className="text-foreground/40">-ai</span>
+            uiXpense<span className="text-foreground/40"> AI</span>
           </span>
         </div>
 

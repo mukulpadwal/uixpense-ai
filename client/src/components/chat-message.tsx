@@ -47,19 +47,19 @@ function ChatMessage({ message }: { message: StreamMessage }) {
 
   if (message.type === "toolCall:start") {
     return (
-      <div className="flex justify-start my-2 px-12">
-        <div className="flex items-start gap-3 px-4 py-3 rounded-xl border bg-stone-900/40 border-white/5 backdrop-blur-md max-w-2xl group transition-all hover:border-white/10 animate-in fade-in slide-in-from-left-2 duration-300">
-          <div className="shrink-0 mt-1">
+      <div className="w-full flex justify-start my-2 px-12">
+        <div className="w-full flex items-start gap-3 px-4 py-3 rounded-xl border bg-stone-900/40 border-white/5 backdrop-blur-md group transition-all hover:border-white/10 animate-in fade-in slide-in-from-left-2 duration-300">
+          <div className="mt-1">
             <div className="p-1.5 rounded-md bg-stone-800/80 border border-white/10">
               <Terminal className="w-3.5 h-3.5 text-orange-500" />
             </div>
           </div>
-          <div className="flex flex-col gap-1.5 min-w-0">
+          <div className="w-full flex flex-col gap-1.5">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] uppercase tracking-wider font-bold text-stone-500">
-                System Step
+              <span className="text-xs uppercase tracking-wider font-bold text-stone-500">
+                Agent Step
               </span>
-              <span className="text-sm font-medium text-stone-300 truncate font-mono">
+              <span className="text-xs font-medium text-stone-300 truncate font-mono">
                 {message.payload.name}
               </span>
             </div>
@@ -79,14 +79,14 @@ function ChatMessage({ message }: { message: StreamMessage }) {
 
   if (message.type === "tool") {
     return (
-      <div className="flex flex-col justify-start my-2 px-12">
-        <div className="flex items-start gap-3 px-4 py-3 rounded-xl border bg-stone-900/40 border-white/5 backdrop-blur-md max-w-2xl group transition-all hover:border-white/10 animate-in fade-in slide-in-from-left-2 duration-300">
+      <div className="w-full flex flex-col justify-start my-2 px-12">
+        <div className="w-full flex items-start gap-3 px-4 py-3 rounded-xl border bg-stone-900/40 border-white/5 backdrop-blur-md group transition-all hover:border-white/10 animate-in fade-in slide-in-from-left-2 duration-300">
           <div className="shrink-0 mt-1">
             <div className="p-1.5 rounded-md bg-stone-800/80 border border-white/10">
               <Terminal className="w-3.5 h-3.5 text-orange-500" />
             </div>
           </div>
-          <div className="flex flex-col gap-1.5 min-w-0">
+          <div className="w-full flex flex-col gap-1.5 min-w-0">
             <div className="flex items-center gap-2">
               <span className="text-[10px] uppercase tracking-wider font-bold text-stone-500">
                 System Step Result

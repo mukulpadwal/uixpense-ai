@@ -30,7 +30,7 @@ function Hero() {
 
         {/* Description */}
         <p className="text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light leading-relaxed text-stone-400">
-          uiXpense-ai is the autonomous financial agent that transforms natural
+          uiXpense AI is the autonomous financial agent that transforms natural
           language into database-backed insights. Add expenses, visualize
           trends, and query your wealth simply by talking.
         </p>
