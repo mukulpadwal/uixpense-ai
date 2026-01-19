@@ -164,7 +164,9 @@ export default function ChatPage() {
             </div>
           ) : (
             messages.map((message) => (
-              <ChatMessage key={message.id} message={message} />
+              <div key={message.id} className="pb-2">
+                <ChatMessage message={message} />
+              </div>
             ))
           )}
 

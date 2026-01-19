@@ -45,7 +45,29 @@ function ChatMessage({ message }: { message: StreamMessage }) {
           <div className="flex flex-col items-start gap-1">
             <div className="px-5 py-3 rounded-3xl rounded-tl-sm bg-white/5 backdrop-blur-md text-stone-100 border border-white/10 shadow-xl">
               <p className="text-sm sm:text-base leading-relaxed tracking-wide">
-                <Markdown remarkPlugins={[remarkGfm]}>
+                <Markdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    table: (props) => (
+                      <table
+                        className="overflow-x-auto w-full border border-foreground/10 border-collapse"
+                        {...props}
+                      />
+                    ),
+                    th: (props) => (
+                      <th
+                        className="border border-foreground/10 px-3 py-2 text-left"
+                        {...props}
+                      />
+                    ),
+                    td: (props) => (
+                      <td
+                        className="border border-foreground/10 px-3 py-2"
+                        {...props}
+                      />
+                    ),
+                  }}
+                >
                   {message.payload.text}
                 </Markdown>
               </p>
