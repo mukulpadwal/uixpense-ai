@@ -1,4 +1,7 @@
 import { Terminal, User, HandCoins } from "lucide-react";
+import Markdown from "react-markdown";
+import remarkGfm from 'remark-gfm'
+
 import type { ChartData, StreamMessage } from "@/types";
 import ExpenseChart from "./expense-chart";
 
@@ -36,7 +39,7 @@ function ChatMessage({ message }: { message: StreamMessage }) {
           <div className="flex flex-col items-start gap-1">
             <div className="px-5 py-3 rounded-3xl rounded-tl-sm bg-white/5 backdrop-blur-md text-stone-100 border border-white/10 shadow-xl">
               <p className="text-sm sm:text-base leading-relaxed tracking-wide">
-                {message.payload.text}
+                <Markdown remarkPlugins={[remarkGfm]}>{message.payload.text}</Markdown>
               </p>
             </div>
           </div>

@@ -21,7 +21,7 @@ export default function ChatPage() {
   }, [messages]);
 
   async function sendMessage(userQuery: string) {
-    await fetchEventSource("http://localhost:8080/chat", {
+    await fetchEventSource(import.meta.env.VITE_BACKEND_API_URL, {
       method: "POST",
       headers: {
         "content-type": "application/json",
