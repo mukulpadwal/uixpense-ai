@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Send, ArrowLeft, Loader2, HandCoins } from "lucide-react";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import type { StreamMessage } from "@/types";
-import { ChatMessage } from "@/components";
+import { ChatMessage, SchemaInfo } from "@/components";
 
 export default function ChatPage() {
   const [input, setInput] = useState("");
@@ -127,6 +127,8 @@ export default function ChatPage() {
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             <span className="text-sm font-medium">Back</span>
           </Link>
+
+          <SchemaInfo />
 
           <div className="flex flex-col items-center">
             <h1 className="font-semibold bg-linear-to-r from-foreground via-stone-200 to-stone-400 bg-clip-text text-transparent">

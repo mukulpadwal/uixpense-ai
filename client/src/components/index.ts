@@ -6,6 +6,7 @@ import Features from "./features";
 import Footer from "./footer";
 import Hero from "./hero";
 import NavBar from "./navbar";
+import SchemaInfo from "./schema-info";
 
 export {
   ChatMessage,
@@ -16,4 +17,5 @@ export {
   Hero,
   NavBar,
   Footer,
+  SchemaInfo,
 };
