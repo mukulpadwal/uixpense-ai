@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 import express from "express";
 import type { Request, Response } from "express";
 import cors from "cors";
@@ -17,7 +19,7 @@ const limiter = rateLimit({
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL,
   }),
 );
 app.use(express.json());
