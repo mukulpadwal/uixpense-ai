@@ -1,16 +1,31 @@
 import express from "express";
 import type { Request, Response } from "express";
 import cors from "cors";
+import { rateLimit } from "express-rate-limit";
+
 import { workflow } from "./graph.ts";
 import type { StreamMessage } from "./types.ts";
 
+const limiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 60 minutes
+  limit: 10, // Limit each IP to 10 requests per `window` (here, per 60 minutes)
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
+});
+
 const app = express();
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  }),
+);
 app.use(express.json());
-app.use(cors());
+app.use(limiter);
 
 const PORT = process.env.PORT || 8080;
 
-app.post("/chat", async (req: Request, res: Response) => {
+app.post("/chat", limiter, async (req: Request, res: Response) => {
   const { userQuery } = req.body;
 
   // 1. Set Special Headers
