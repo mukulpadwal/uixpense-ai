@@ -5,8 +5,8 @@ import type { Request, Response } from "express";
 import cors from "cors";
 import { rateLimit } from "express-rate-limit";
 
-import { workflow } from "./graph.ts";
-import type { StreamMessage } from "./types.ts";
+import { workflow } from "./graph.js";
+import type { StreamMessage } from "./types.js";
 
 const limiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 60 minutes

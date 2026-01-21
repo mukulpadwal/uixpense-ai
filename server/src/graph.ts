@@ -5,11 +5,12 @@ import {
 } from "@langchain/langgraph";
 import type { LangGraphRunnableConfig } from "@langchain/langgraph";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
-import initDB from "./db.ts";
-import initTools from "./tools.ts";
-import llm from "./llm.ts";
 import { AIMessage, ToolMessage } from "langchain";
-import type { StreamMessage } from "./types.ts";
+
+import initDB from "./db.js";
+import initTools from "./tools.js";
+import llm from "./llm.js";
+import type { StreamMessage } from "./types.js";
 
 const database = initDB("./expenses.db");
 const tools = initTools(database);
