@@ -44,7 +44,7 @@ function ChatMessage({ message }: { message: StreamMessage }) {
           </div>
           <div className="flex flex-col items-start gap-1">
             <div className="px-5 py-3 rounded-3xl rounded-tl-sm bg-white/5 backdrop-blur-md text-stone-100 border border-white/10 shadow-xl">
-              <p className="text-sm sm:text-base leading-relaxed tracking-wide">
+              <div className="text-sm sm:text-base leading-relaxed tracking-wide">
                 <Markdown
                   remarkPlugins={[remarkGfm]}
                   components={{
@@ -70,7 +70,7 @@ function ChatMessage({ message }: { message: StreamMessage }) {
                 >
                   {message.payload.text}
                 </Markdown>
-              </p>
+              </div>
             </div>
           </div>
         </div>

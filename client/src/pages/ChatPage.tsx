@@ -28,6 +28,24 @@ export default function ChatPage() {
       },
       body: JSON.stringify({ userQuery }),
 
+      async onopen(response) {
+        if (response.ok) {
+          return;
+        } else {
+          if (response.status === 429) {
+            setMessages((prevMessages) => [
+              ...prevMessages,
+              {
+                id: Date.now().toString(),
+                type: "ai",
+                payload: {
+                  text: "Too many requests. Please try again after 1 hour.",
+                },
+              },
+            ]);
+          }
+        }
+      },
       onmessage(event) {
         const parsedData = JSON.parse(event.data) as StreamMessage;
 
