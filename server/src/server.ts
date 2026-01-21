@@ -27,6 +27,10 @@ app.use(limiter);
 
 const PORT = process.env.PORT || 8080;
 
+app.get("/health", (_: Request, res: Response) => {
+  res.status(200).send("ok");
+});
+
 app.post("/chat", limiter, async (req: Request, res: Response) => {
   const { userQuery } = req.body;
 
