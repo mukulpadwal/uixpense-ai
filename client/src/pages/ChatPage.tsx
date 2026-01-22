@@ -95,6 +95,19 @@ export default function ChatPage() {
           ]);
         }
       },
+      onerror() {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            id: Date.now().toString(),
+            type: "ai",
+            payload: {
+              text: "Something went wrong. Please try again later.",
+            },
+          },
+        ]);
+        throw new Error("Something went wrong at server.");
+      },
     });
   }
 
@@ -160,7 +173,6 @@ export default function ChatPage() {
       </div>
 
       <div className="overflow-y-auto scroll-smooth">
-        {}
         <div className="h-full max-w-7xl mx-auto px-4 sm:px-8 py-8 space-y-6">
           {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center gap-4">
