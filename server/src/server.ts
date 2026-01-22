@@ -5,8 +5,12 @@ import type { Request, Response } from "express";
 import cors from "cors";
 import { rateLimit } from "express-rate-limit";
 
-import { workflow } from "./graph.js";
 import type { StreamMessage } from "./types.js";
+import { workflow } from "./graph.js";
+
+/**
+ * chat:1 Access to fetch at 'https://uixpense-ai.onrender.com/chat' from origin 'https://uixpense-ai.vercel.app' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource. index-CG1d2VzF.js:13  POST https://uixpense-ai.onrender.com/chat net::ERR_FAILED C @ index-CG1d2VzF.js:13 (anonymous) @ index-CG1d2VzF.js:13 Q8 @ index-CG1d2VzF.js:13 f @ index-CG1d2VzF.js:158 d @ index-CG1d2VzF.js:158 NA @ index-CG1d2VzF.js:8 (anonymous) @ index-CG1d2VzF.js:8 $_ @ index-CG1d2VzF.js:8 Gy @ index-CG1d2VzF.js:8 ag @ index-CG1d2VzF.js:9 bB @ index-CG1d2VzF.js:9
+ */
 
 const limiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 60 minutes
@@ -17,11 +21,7 @@ const limiter = rateLimit({
 });
 
 const app = express();
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-  }),
-);
+app.use(cors());
 app.use(express.json());
 app.use(limiter);
 
