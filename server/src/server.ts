@@ -41,9 +41,12 @@ app.post("/chat", limiter, async (req: Request, res: Response) => {
   const { userQuery } = req.body;
 
   // 1. Set Special Headers
-  res.writeHead(200, {
-    "content-type": "text/event-stream",
-  });
+  res.status(200);
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+
+  res.flushHeaders();
 
   const response = await workflow.stream(
     {
