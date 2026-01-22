@@ -20,16 +20,23 @@ const limiter = rateLimit({
   ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
 });
 
+const corsOptions = {
+  origin: process.env.CLIENT_URL,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+
 const app = express();
-app.use(cors(
-  {
-    origin: process.env.CLIENT_URL,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type"],
-  }
-));
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
+
 app.use(express.json());
-app.use(limiter);
+
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") return next();
+  return limiter(req, res, next);
+})
 
 const PORT = process.env.PORT || 8080;
 
@@ -37,7 +44,7 @@ app.get("/health", (_: Request, res: Response) => {
   res.status(200).send("ok");
 });
 
-app.post("/chat", limiter, async (req: Request, res: Response) => {
+app.post("/chat", async (req: Request, res: Response) => {
   const { userQuery } = req.body;
 
   // 1. Set Special Headers
