@@ -20,8 +20,29 @@ export default function ChatPage() {
     scrollToBottom();
   }, [messages]);
 
+  async function initChat() {
+    const res = await fetch(
+      `${import.meta.env.VITE_BACKEND_API_URL}/chat/init`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+      }
+    );
+
+    if (!res.ok) {
+      if (res.status === 429) {
+        throw new Error("RATE_LIMIT");
+      }
+      throw new Error("INIT_FAILED");
+    }
+  }
+
   async function sendMessage(userQuery: string) {
-    await fetchEventSource(`${import.meta.env.VITE_BACKEND_API_URL}/chat`, {
+    await initChat();
+
+    await fetchEventSource(`${import.meta.env.VITE_BACKEND_API_URL}/chat/stream`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -130,10 +151,24 @@ export default function ChatPage() {
     setIsLoading(true);
 
     try {
-      sendMessage(input);
+      await sendMessage(input);
     } catch (error) {
-      setMessages((prevMessages) => [
-        ...prevMessages,
+      if (error instanceof Error && error.message === "RATE_LIMIT") {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now().toString(),
+            type: "ai",
+            payload: {
+              text: "You've reached the chat limit. Please try again later.",
+            },
+          },
+        ]);
+        return;
+      }
+
+      setMessages((prev) => [
+        ...prev,
         {
           id: Date.now().toString(),
           type: "ai",
