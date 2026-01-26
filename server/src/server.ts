@@ -8,35 +8,25 @@ import { rateLimit } from "express-rate-limit";
 import type { StreamMessage } from "./types.js";
 import { workflow } from "./graph.js";
 
-/**
- * chat:1 Access to fetch at 'https://uixpense-ai.onrender.com/chat' from origin 'https://uixpense-ai.vercel.app' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource. index-CG1d2VzF.js:13  POST https://uixpense-ai.onrender.com/chat net::ERR_FAILED C @ index-CG1d2VzF.js:13 (anonymous) @ index-CG1d2VzF.js:13 Q8 @ index-CG1d2VzF.js:13 f @ index-CG1d2VzF.js:158 d @ index-CG1d2VzF.js:158 NA @ index-CG1d2VzF.js:8 (anonymous) @ index-CG1d2VzF.js:8 $_ @ index-CG1d2VzF.js:8 Gy @ index-CG1d2VzF.js:8 ag @ index-CG1d2VzF.js:9 bB @ index-CG1d2VzF.js:9
- */
-
-const limiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 60 minutes
-  limit: 10, // Limit each IP to 10 requests per `window` (here, per 60 minutes)
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
-});
-
-const corsOptions = {
-  origin: process.env.CLIENT_URL,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-
-
 const app = express();
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+
+const clientOrigin = process.env.CLIENT_ORIGIN;
+
+app.use(cors({
+  origin: clientOrigin,
+  credentials: true,
+}));
+
+app.options(/.*/, cors());
 
 app.use(express.json());
 
-app.use((req, res, next) => {
-  if (req.method === "OPTIONS") return next();
-  return limiter(req, res, next);
-})
+const chatLimiter = rateLimit({
+  windowMs: Number(process.env.CHAT_WINDOW_MIN) * 60 * 1000,
+  max: Number(process.env.CHAT_LIMIT),
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 const PORT = process.env.PORT || 8080;
 
@@ -44,15 +34,18 @@ app.get("/health", (_: Request, res: Response) => {
   res.status(200).send("ok");
 });
 
-app.post("/chat", async (req: Request, res: Response) => {
+app.post("/chat/init", chatLimiter, (req, res) => {
+  res.json({ ok: true });
+});
+
+app.post("/chat/stream", async (req: Request, res: Response) => {
   const { userQuery } = req.body;
 
   // 1. Set Special Headers
-  res.status(200);
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
-
+  res.setHeader("Access-Control-Allow-Origin", clientOrigin as string);
   res.flushHeaders();
 
   const response = await workflow.stream(
