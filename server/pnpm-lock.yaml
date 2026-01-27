@@ -9,17 +9,17 @@ importers:
   .:
     dependencies:
       '@langchain/core':
-        specifier: ^1.1.15
-        version: 1.1.15
+        specifier: ^1.1.17
+        version: 1.1.17
       '@langchain/groq':
         specifier: ^1.0.3
-        version: 1.0.3(@langchain/core@1.1.15)
+        version: 1.0.3(@langchain/core@1.1.17)
       '@langchain/langgraph':
-        specifier: ^1.1.0
-        version: 1.1.0(@langchain/core@1.1.15)(zod@4.3.5)
+        specifier: ^1.1.2
+        version: 1.1.2(@langchain/core@1.1.17)(zod@4.3.6)
       cors:
-        specifier: ^2.8.5
-        version: 2.8.5
+        specifier: ^2.8.6
+        version: 2.8.6
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
@@ -30,11 +30,11 @@ importers:
         specifier: ^8.2.1
         version: 8.2.1(express@5.2.1)
       langchain:
-        specifier: ^1.2.10
-        version: 1.2.10(@langchain/core@1.1.15)
+        specifier: ^1.2.14
+        version: 1.2.14(@langchain/core@1.1.17)
       zod:
-        specifier: ^4.3.5
-        version: 4.3.5
+        specifier: ^4.3.6
+        version: 4.3.6
     devDependencies:
       '@types/cors':
         specifier: ^2.8.19
@@ -43,8 +43,8 @@ importers:
         specifier: ^5.0.6
         version: 5.0.6
       '@types/node':
-        specifier: ^25.0.9
-        version: 25.0.9
+        specifier: ^25.0.10
+        version: 25.0.10
       tsx:
         specifier: ^4.21.0
         version: 4.21.0
@@ -210,8 +210,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@langchain/core@1.1.15':
-    resolution: {integrity: sha512-b8RN5DkWAmDAlMu/UpTZEluYwCLpm63PPWniRKlE8ie3KkkE7IuMQ38pf4kV1iaiI+d99BEQa2vafQHfCujsRA==}
+  '@langchain/core@1.1.17':
+    resolution: {integrity: sha512-g7/kcKbKEwNZSyyT7aT0utxn7wTOtKErqz0cL6VjrV4v/aOb9g+dKcfj17YkSm42YQmJp/rB2IXGc17vQPEBqA==}
     engines: {node: '>=20'}
 
   '@langchain/groq@1.0.3':
@@ -226,10 +226,10 @@ packages:
     peerDependencies:
       '@langchain/core': ^1.0.1
 
-  '@langchain/langgraph-sdk@1.5.4':
-    resolution: {integrity: sha512-eSYqG875c2qvcPwdvBwQH0niTZxt6roMGc2dAWBqCbWCUiUL0X4ftYHg2OqOelsrNE3SO6faLr/m0LIPc9hDwg==}
+  '@langchain/langgraph-sdk@1.5.5':
+    resolution: {integrity: sha512-SyiAs6TVXPWlt/8cI9pj/43nbIvclY3ytKqUFbL5MplCUnItetEyqvH87EncxyVF5D7iJKRZRfSVYBMmOZbjbQ==}
     peerDependencies:
-      '@langchain/core': ^1.0.1
+      '@langchain/core': ^1.1.15
       react: ^18 || ^19
       react-dom: ^18 || ^19
     peerDependenciesMeta:
@@ -240,8 +240,8 @@ packages:
       react-dom:
         optional: true
 
-  '@langchain/langgraph@1.1.0':
-    resolution: {integrity: sha512-3n1GL0ZTtr57ZwbYvbi4Th26fwiGogmpFn8OA8UXEpBM2HcpGwcv1+c8YSBJF4XRjlcCzIlXtY+DyrNsvinc6g==}
+  '@langchain/langgraph@1.1.2':
+    resolution: {integrity: sha512-kpZCttZ0N+jHSl5Vh/zVNElD5SxGR4sTjjLiBC00aLGf9JK+Sa/XXO6Bsk3WWXFtA1dY+4tUzUqH0mAHfN0WvA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@langchain/core': ^1.0.1
@@ -250,6 +250,9 @@ packages:
     peerDependenciesMeta:
       zod-to-json-schema:
         optional: true
+
+  '@standard-schema/spec@1.1.0':
+    resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
   '@types/body-parser@1.19.6':
     resolution: {integrity: sha512-HLFeCYgz89uk22N5Qg3dvGvsv46B8GLvKKo1zKG4NybA8U2DiEO3w9lqGg29t/tfLRJpJ6iQxnVw4OnB7MoM9g==}
@@ -275,8 +278,8 @@ packages:
   '@types/node@18.19.130':
     resolution: {integrity: sha512-GRaXQx6jGfL8sKfaIDD6OupbIHBr9jv7Jnaml9tB7l4v068PAOXqfcujMMo5PhbIs6ggR1XODELqahT2R8v0fg==}
 
-  '@types/node@25.0.9':
-    resolution: {integrity: sha512-/rpCXHlCWeqClNBwUhDcusJxXYDjZTyE8v5oTO7WbL8eij2nKhUeU89/6xgjU7N4/Vh3He0BtyhJdQbDyhiXAw==}
+  '@types/node@25.0.10':
+    resolution: {integrity: sha512-zWW5KPngR/yvakJgGOmZ5vTBemDoSqF3AcV/LrO5u5wTWyEAVVh+IT39G4gtyAkh3CtTZs8aX/yRM82OfzHJRg==}
 
   '@types/qs@6.14.0':
     resolution: {integrity: sha512-eOunJqu0K1923aExK6y8p6fsihYEn/BYuQ4g0CxAAgFc4b/ZLN4CrsRZ55srTdqoiLzU2B2evC+apEIxprEzkQ==}
@@ -373,8 +376,8 @@ packages:
     resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
     engines: {node: '>= 0.6'}
 
-  cors@2.8.5:
-    resolution: {integrity: sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==}
+  cors@2.8.6:
+    resolution: {integrity: sha512-tJtZBBHA6vjIAaF6EnIaq6laBBP9aq/Y3ouVJjEfoHbRBcHBAHYcMh/w8LDrk2PvIMMq8gmopa5D4V8RmbrxGw==}
     engines: {node: '>= 0.10'}
 
   debug@4.4.3:
@@ -448,8 +451,8 @@ packages:
   eventemitter3@4.0.7:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
 
-  eventemitter3@5.0.1:
-    resolution: {integrity: sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==}
+  eventemitter3@5.0.4:
+    resolution: {integrity: sha512-mlsTRyGaPBjPedk6Bvw+aqbsXDtoAyAzm5MO7JgU+yVRyMQ5O8bD4Kcci7BS85f93veegeCPkL8R4GLClnjLFw==}
 
   express-rate-limit@8.2.1:
     resolution: {integrity: sha512-PCZEIEIxqwhzw4KF0n7QF4QqruVTcF73O5kFKUnGOyjbCCgizBBiFaYpd/fnBLUMPw/BWw9OsiN7GgrNYr7j6g==}
@@ -558,14 +561,14 @@ packages:
   js-tiktoken@1.0.21:
     resolution: {integrity: sha512-biOj/6M5qdgx5TKjDnFT1ymSpM5tbd3ylwDtrQvFQSu0Z7bBYko2dF+W/aUkXUPuk6IVpRxk/3Q2sHOzGlS36g==}
 
-  langchain@1.2.10:
-    resolution: {integrity: sha512-9uVxOJE/RTECvNutQfOLwH7f6R9mcq0G/IMHwA2eptDA86R/Yz2zWMz4vARVFPxPrdSJ9nJFDPAqRQlRFwdHBw==}
+  langchain@1.2.14:
+    resolution: {integrity: sha512-nLtc7ZQT8VUor6eT7Yg7d43W0HDZ3wIujN2uonnvUrycK2P+i5TRDAhlcqEcGviZdVqk0TZMXcQ3IXrtSHnbvQ==}
     engines: {node: '>=20'}
     peerDependencies:
-      '@langchain/core': 1.1.15
+      '@langchain/core': 1.1.17
 
-  langsmith@0.4.7:
-    resolution: {integrity: sha512-Esv5g/J8wwRwbGQr10PB9+bLsNk0mWbrXc7nnEreQDhh0azbU57I7epSnT7GC4sS4EOWavhbxk+6p8PTXtreHw==}
+  langsmith@0.4.10:
+    resolution: {integrity: sha512-l9QP/a7RXBXdaoAnNx99X+TK8aul8Qe4us1oCybdMgDmYMLT5PAwlJactvSdTlT8NOeSoFThYa2N7ijznBNe9w==}
     peerDependencies:
       '@opentelemetry/api': '*'
       '@opentelemetry/exporter-trace-otlp-proto': '*'
@@ -800,8 +803,8 @@ packages:
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
-  zod@4.3.5:
-    resolution: {integrity: sha512-k7Nwx6vuWx1IJ9Bjuf4Zt1PEllcwe7cls3VNzm4CQ1/hgtFUK2bRNG3rvnpPUhFjmqJKAKtjV576KnUkHocg/g==}
+  zod@4.3.6:
+    resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
 
 snapshots:
 
@@ -885,71 +888,74 @@ snapshots:
   '@esbuild/win32-x64@0.27.2':
     optional: true
 
-  '@langchain/core@1.1.15':
+  '@langchain/core@1.1.17':
     dependencies:
       '@cfworker/json-schema': 4.1.1
       ansi-styles: 5.2.0
       camelcase: 6.3.0
       decamelize: 1.2.0
       js-tiktoken: 1.0.21
-      langsmith: 0.4.7
+      langsmith: 0.4.10
       mustache: 4.2.0
       p-queue: 6.6.2
       uuid: 10.0.0
-      zod: 4.3.5
+      zod: 4.3.6
     transitivePeerDependencies:
       - '@opentelemetry/api'
       - '@opentelemetry/exporter-trace-otlp-proto'
       - '@opentelemetry/sdk-trace-base'
       - openai
 
-  '@langchain/groq@1.0.3(@langchain/core@1.1.15)':
+  '@langchain/groq@1.0.3(@langchain/core@1.1.17)':
     dependencies:
-      '@langchain/core': 1.1.15
+      '@langchain/core': 1.1.17
       groq-sdk: 0.19.0
     transitivePeerDependencies:
       - encoding
 
-  '@langchain/langgraph-checkpoint@1.0.0(@langchain/core@1.1.15)':
+  '@langchain/langgraph-checkpoint@1.0.0(@langchain/core@1.1.17)':
     dependencies:
-      '@langchain/core': 1.1.15
+      '@langchain/core': 1.1.17
       uuid: 10.0.0
 
-  '@langchain/langgraph-sdk@1.5.4(@langchain/core@1.1.15)':
+  '@langchain/langgraph-sdk@1.5.5(@langchain/core@1.1.17)':
     dependencies:
       p-queue: 9.1.0
       p-retry: 7.1.1
       uuid: 13.0.0
     optionalDependencies:
-      '@langchain/core': 1.1.15
+      '@langchain/core': 1.1.17
 
-  '@langchain/langgraph@1.1.0(@langchain/core@1.1.15)(zod@4.3.5)':
+  '@langchain/langgraph@1.1.2(@langchain/core@1.1.17)(zod@4.3.6)':
     dependencies:
-      '@langchain/core': 1.1.15
-      '@langchain/langgraph-checkpoint': 1.0.0(@langchain/core@1.1.15)
-      '@langchain/langgraph-sdk': 1.5.4(@langchain/core@1.1.15)
+      '@langchain/core': 1.1.17
+      '@langchain/langgraph-checkpoint': 1.0.0(@langchain/core@1.1.17)
+      '@langchain/langgraph-sdk': 1.5.5(@langchain/core@1.1.17)
+      '@standard-schema/spec': 1.1.0
       uuid: 10.0.0
-      zod: 4.3.5
+      zod: 4.3.6
     transitivePeerDependencies:
       - react
       - react-dom
 
+  '@standard-schema/spec@1.1.0': {}
+
   '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 25.0.9
+      '@types/node': 25.0.10
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 25.0.9
+      '@types/node': 25.0.10
 
   '@types/cors@2.8.19':
     dependencies:
-      '@types/node': 25.0.9
+      '@types/node': 25.0.10
 
   '@types/express-serve-static-core@5.1.1':
     dependencies:
-      '@types/node': 25.0.9
+      '@types/node': 25.0.10
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 1.2.1
@@ -964,14 +970,14 @@ snapshots:
 
   '@types/node-fetch@2.6.13':
     dependencies:
-      '@types/node': 25.0.9
+      '@types/node': 25.0.10
       form-data: 4.0.5
 
   '@types/node@18.19.130':
     dependencies:
       undici-types: 5.26.5
 
-  '@types/node@25.0.9':
+  '@types/node@25.0.10':
     dependencies:
       undici-types: 7.16.0
 
@@ -981,12 +987,12 @@ snapshots:
 
   '@types/send@1.2.1':
     dependencies:
-      '@types/node': 25.0.9
+      '@types/node': 25.0.10
 
   '@types/serve-static@2.2.0':
     dependencies:
       '@types/http-errors': 2.0.5
-      '@types/node': 25.0.9
+      '@types/node': 25.0.10
 
   '@types/uuid@10.0.0': {}
 
@@ -1068,7 +1074,7 @@ snapshots:
 
   cookie@0.7.2: {}
 
-  cors@2.8.5:
+  cors@2.8.6:
     dependencies:
       object-assign: 4.1.1
       vary: 1.1.2
@@ -1147,7 +1153,7 @@ snapshots:
 
   eventemitter3@4.0.7: {}
 
-  eventemitter3@5.0.1: {}
+  eventemitter3@5.0.4: {}
 
   express-rate-limit@8.2.1(express@5.2.1):
     dependencies:
@@ -1300,14 +1306,14 @@ snapshots:
     dependencies:
       base64-js: 1.5.1
 
-  langchain@1.2.10(@langchain/core@1.1.15):
+  langchain@1.2.14(@langchain/core@1.1.17):
     dependencies:
-      '@langchain/core': 1.1.15
-      '@langchain/langgraph': 1.1.0(@langchain/core@1.1.15)(zod@4.3.5)
-      '@langchain/langgraph-checkpoint': 1.0.0(@langchain/core@1.1.15)
-      langsmith: 0.4.7
+      '@langchain/core': 1.1.17
+      '@langchain/langgraph': 1.1.2(@langchain/core@1.1.17)(zod@4.3.6)
+      '@langchain/langgraph-checkpoint': 1.0.0(@langchain/core@1.1.17)
+      langsmith: 0.4.10
       uuid: 10.0.0
-      zod: 4.3.5
+      zod: 4.3.6
     transitivePeerDependencies:
       - '@opentelemetry/api'
       - '@opentelemetry/exporter-trace-otlp-proto'
@@ -1317,7 +1323,7 @@ snapshots:
       - react-dom
       - zod-to-json-schema
 
-  langsmith@0.4.7:
+  langsmith@0.4.10:
     dependencies:
       '@types/uuid': 10.0.0
       chalk: 4.1.2
@@ -1377,7 +1383,7 @@ snapshots:
 
   p-queue@9.1.0:
     dependencies:
-      eventemitter3: 5.0.1
+      eventemitter3: 5.0.4
       p-timeout: 7.0.1
 
   p-retry@7.1.1:
@@ -1531,4 +1537,4 @@ snapshots:
 
   wrappy@1.0.2: {}
 
-  zod@4.3.5: {}
+  zod@4.3.6: {}

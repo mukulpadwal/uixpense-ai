@@ -183,8 +183,8 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="h-screen w-full bg-background text-foreground grid grid-rows-[auto_1fr_auto]">
-      <div className="border-b">
+    <div className="h-screen max-w-7xl mx-auto flex flex-col">
+      <div className="shrink-0 border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3 flex items-center justify-between">
           <Link
             to="/"
@@ -207,49 +207,47 @@ export default function ChatPage() {
         </div>
       </div>
 
-      <div className="overflow-y-auto scroll-smooth">
-        <div className="h-full max-w-7xl mx-auto px-4 sm:px-8 py-8 space-y-6">
-          {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center gap-4">
-              <div className="relative">
-                <div className="absolute inset-0 rounded-full blur-2xl bg-linear-to-br from-orange-600/30 to-pink-600/20 animate-pulse" />
-                <div className="relative w-24 h-24 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm flex items-center justify-center">
-                  <HandCoins className="h-10 w-10" />
-                </div>
-              </div>
-
-              <div className="space-y-4 max-w-2xl">
-                <h2 className="text-3xl sm:text-5xl font-semibold">
-                  <span className="bg-linear-to-r from-white via-stone-300 to-orange-400 bg-clip-text text-transparent">
-                    What would you like to know?
-                  </span>
-                </h2>
-                <p className="text-stone-400 text-sm sm:text-lg">
-                  Ask me about expenses, trends, budgets, or insights.
-                </p>
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-4 sm:px-8 [scrollbar-gutter:stable]">
+        {messages.length === 0 ? (
+          <div className="h-full flex flex-col items-center justify-center text-center gap-4">
+            <div className="relative">
+              <div className="absolute inset-0 rounded-full blur-2xl bg-linear-to-br from-orange-600/30 to-pink-600/20 animate-pulse" />
+              <div className="relative w-24 h-24 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm flex items-center justify-center">
+                <HandCoins className="h-10 w-10" />
               </div>
             </div>
-          ) : (
-            messages.map((message) => (
-              <div key={message.id} className="pb-2">
-                <ChatMessage message={message} />
-              </div>
-            ))
-          )}
 
-          {isLoading && (
-            <div className="flex justify-start">
-              <div className="bg-white/10 border border-white/15 rounded-2xl px-6 py-4">
-                <span className="text-xs text-stone-400">Thinking…</span>
-              </div>
+            <div className="space-y-4 max-w-2xl">
+              <h2 className="text-3xl sm:text-5xl font-semibold">
+                <span className="bg-linear-to-r from-white via-stone-300 to-orange-400 bg-clip-text text-transparent">
+                  What would you like to know?
+                </span>
+              </h2>
+              <p className="text-stone-400 text-sm sm:text-lg">
+                Ask me about expenses, trends, budgets, or insights.
+              </p>
             </div>
-          )}
+          </div>
+        ) : (
+          messages.map((message) => (
+            <div key={message.id} className="pb-2">
+              <ChatMessage message={message} />
+            </div>
+          ))
+        )}
 
-          <div ref={messagesEndRef} />
-        </div>
+        {isLoading && (
+          <div className="flex items-center justify-start gap-1 pb-2">
+            <div className="w-4 h-4 rounded-full bg-white/10 border border-white/15 animate-bounce [animation-delay:0ms]" />
+            <div className="w-4 h-4 rounded-full bg-white/10 border border-white/15 animate-bounce [animation-delay:150ms]" />
+            <div className="w-4 h-4 rounded-full bg-white/10 border border-white/15 animate-bounce [animation-delay:300ms]" />
+          </div>
+        )}
+
+        <div ref={messagesEndRef} />
       </div>
 
-      <div className="border-t border-foreground/10 bg-background backdrop-blur-xl">
+      <div className="shrink-0">
         <form
           onSubmit={handleSendMessage}
           className="max-w-7xl mx-auto p-4 sm:p-8"
