@@ -227,6 +227,37 @@ export default function ChatPage() {
                 Ask me about expenses, trends, budgets, or insights.
               </p>
             </div>
+
+            <div className="mt-4">
+              <div className="grid sm:grid-cols-2 gap-2">
+                {[
+                  {
+                    id: 1,
+                    text: "What's the current state of the Database?",
+                  },
+                  {
+                    id: 2,
+                    text: "Add a new expense?",
+                  },
+                  {
+                    id: 3,
+                    text: "Can you help me visualize my spending for this month grouped by day?",
+                  },
+                  {
+                    id: 4,
+                    text: "What's my total spending?",
+                  },
+                ].map((item) => (
+                  <div
+                    key={item.id}
+                    className="border border-white/10 rounded-lg p-2 max-w-lg flex items-center justify-center cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => setInput(item.text)}
+                  >
+                    <p className="text-stone-400 text-sm">{item.text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         ) : (
           messages.map((message) => (
