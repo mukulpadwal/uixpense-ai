@@ -8,10 +8,10 @@ import { ChatMessage, SchemaInfo } from "@/components";
 
 export default function ChatPage() {
   const [input, setInput] = useState("");
-  const [isRequestAborted, setIsRequestAborted] = useState<boolean>(false);
   const [messages, setMessages] = useState<StreamMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -43,108 +43,149 @@ export default function ChatPage() {
   async function sendMessage(userQuery: string) {
     await initChat();
 
-    const abortController = new AbortController();
-    const timeout = 2000;
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
+    const timeout = 50;
     let timeoutId;
 
     if (timeout) {
-      timeoutId = setTimeout(() => abortController.abort(), timeout);
+      timeoutId = setTimeout(() => controller.abort(), timeout);
     }
 
-    await fetchEventSource(`${import.meta.env.VITE_BACKEND_API_URL}/chat/stream`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      signal: abortController.signal,
-      body: JSON.stringify({ userQuery }),
+    try {
+      await fetchEventSource(`${import.meta.env.VITE_BACKEND_API_URL}/chat/stream`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        signal: controller.signal,
+        body: JSON.stringify({ userQuery }),
 
-      async onopen(response) {
-        if (response.ok) {
-          return;
-        } else {
-          if (response.status === 429) {
-            setMessages((prevMessages) => [
-              ...prevMessages,
-              {
-                id: Date.now().toString(),
-                type: "ai",
-                payload: {
-                  text: "Too many requests. Please try again after 1 hour.",
-                },
-              },
-            ]);
-          }
-        }
-      },
-      onmessage(event) {
-        const parsedData = JSON.parse(event.data) as StreamMessage;
-
-        if (parsedData.type === "ai") {
-          setMessages((prevMessages) => {
-            const lastMessage = prevMessages.at(-1);
-
-            if (lastMessage && lastMessage.type === "ai") {
-              const clonedMessages = [...prevMessages];
-
-              clonedMessages[clonedMessages.length - 1] = {
-                ...lastMessage,
-                payload: {
-                  text: lastMessage.payload.text + parsedData.payload.text,
-                },
-              };
-
-              return clonedMessages;
-            } else {
-              return [
+        async onopen(response) {
+          if (response.ok) {
+            return;
+          } else {
+            if (response.status === 429) {
+              setMessages((prevMessages) => [
                 ...prevMessages,
                 {
                   id: Date.now().toString(),
                   type: "ai",
-                  payload: parsedData.payload,
+                  payload: {
+                    text: "Too many requests. Please try again after 1 hour.",
+                  },
                 },
-              ];
+              ]);
             }
-          });
-        } else if (parsedData.type === "toolCall:start") {
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            {
-              id: Date.now().toString(),
-              type: "toolCall:start",
-              payload: parsedData.payload,
-            },
-          ]);
-        } else if (parsedData.type === "tool") {
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            {
-              id: Date.now().toString(),
-              type: "tool",
-              payload: parsedData.payload,
-            },
-          ]);
-        }
-      },
-      onerror() {
-        setMessages((prevMessages) => [
-          ...prevMessages,
+          }
+        },
+        onmessage(event) {
+          const parsedData = JSON.parse(event.data) as StreamMessage;
+
+          if (parsedData.type === "ai") {
+            setMessages((prevMessages) => {
+              const lastMessage = prevMessages.at(-1);
+
+              if (lastMessage && lastMessage.type === "ai") {
+                const clonedMessages = [...prevMessages];
+
+                clonedMessages[clonedMessages.length - 1] = {
+                  ...lastMessage,
+                  payload: {
+                    text: lastMessage.payload.text + parsedData.payload.text,
+                  },
+                };
+
+                return clonedMessages;
+              } else {
+                return [
+                  ...prevMessages,
+                  {
+                    id: Date.now().toString(),
+                    type: "ai",
+                    payload: parsedData.payload,
+                  },
+                ];
+              }
+            });
+          } else if (parsedData.type === "toolCall:start") {
+            setMessages((prevMessages) => [
+              ...prevMessages,
+              {
+                id: Date.now().toString(),
+                type: "toolCall:start",
+                payload: parsedData.payload,
+              },
+            ]);
+          } else if (parsedData.type === "tool") {
+            setMessages((prevMessages) => [
+              ...prevMessages,
+              {
+                id: Date.now().toString(),
+                type: "tool",
+                payload: parsedData.payload,
+              },
+            ]);
+          }
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onerror(err: any) {
+          if (err?.name === "AbortError") {
+            setMessages((prev) => [
+              ...prev,
+              {
+                id: Date.now().toString(),
+                type: "ai",
+                payload: {
+                  text: "Request timed out.",
+                },
+              },
+            ]);
+
+            throw err;
+          }
+
+          throw err;
+        },
+      });
+
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.log(err);
+      if (err.name === "AbortError") {
+        setMessages((prev) => [
+          ...prev,
           {
             id: Date.now().toString(),
             type: "ai",
             payload: {
-              text: "Something went wrong. Please try again later.",
+              text: "Request timed out. Please try again.",
             },
           },
         ]);
-        throw new Error("Something went wrong at server.");
-      },
-    });
+      } else if (err.message === "RATE_LIMIT") {
+        throw err
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now().toString(),
+            type: "ai",
+            payload: {
+              text: "Something went wrong. Please try again.",
+            },
+          },
+        ]);
+      }
+    } finally {
+      clearTimeout(timeoutId);
+      abortControllerRef.current = null;
+    }
 
-    if (timeoutId) {
-      setIsRequestAborted(true);
-      clearTimeout(timeoutId)
-    };
   }
 
   const handleSendMessage = async (e: React.SubmitEvent) => {
@@ -194,21 +235,8 @@ export default function ChatPage() {
       ]);
     } finally {
       setIsLoading(false);
-      if (isRequestAborted) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: Date.now().toString(),
-            type: "ai",
-            payload: {
-              text: "Looks like the server is not responding. Please try again later",
-            },
-          },
-        ]);
-        setIsRequestAborted(false);
-      }
-    }
-  };
+    };
+  }
 
   return (
     <div className="h-screen max-w-7xl mx-auto flex flex-col">
