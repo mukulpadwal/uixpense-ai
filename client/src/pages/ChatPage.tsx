@@ -27,7 +27,7 @@ export default function ChatPage() {
         method: "POST",
         headers: {
           "content-type": "application/json",
-        },
+        }
       }
     );
 
@@ -42,11 +42,20 @@ export default function ChatPage() {
   async function sendMessage(userQuery: string) {
     await initChat();
 
+    const abortController = new AbortController();
+    const timeout = 2000;
+    let timeoutId;
+
+    if (timeout) {
+      timeoutId = setTimeout(() => abortController.abort(), timeout);
+    }
+
     await fetchEventSource(`${import.meta.env.VITE_BACKEND_API_URL}/chat/stream`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
       },
+      signal: abortController.signal,
       body: JSON.stringify({ userQuery }),
 
       async onopen(response) {
@@ -130,9 +139,11 @@ export default function ChatPage() {
         throw new Error("Something went wrong at server.");
       },
     });
+
+    if (timeoutId) clearTimeout(timeoutId);
   }
 
-  const handleSendMessage = async (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.SubmitEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
@@ -179,6 +190,16 @@ export default function ChatPage() {
       ]);
     } finally {
       setIsLoading(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString(),
+          type: "ai",
+          payload: {
+            text: "Looks like the server is not responding. Please try again later",
+          },
+        },
+      ]);
     }
   };
 
