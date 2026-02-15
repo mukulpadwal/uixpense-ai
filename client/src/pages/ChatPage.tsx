@@ -8,6 +8,7 @@ import { ChatMessage, SchemaInfo } from "@/components";
 
 export default function ChatPage() {
   const [input, setInput] = useState("");
+  const [isRequestAborted, setIsRequestAborted] = useState<boolean>(false);
   const [messages, setMessages] = useState<StreamMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -140,7 +141,10 @@ export default function ChatPage() {
       },
     });
 
-    if (timeoutId) clearTimeout(timeoutId);
+    if (timeoutId) {
+      setIsRequestAborted(true);
+      clearTimeout(timeoutId)
+    };
   }
 
   const handleSendMessage = async (e: React.SubmitEvent) => {
@@ -190,16 +194,19 @@ export default function ChatPage() {
       ]);
     } finally {
       setIsLoading(false);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now().toString(),
-          type: "ai",
-          payload: {
-            text: "Looks like the server is not responding. Please try again later",
+      if (isRequestAborted) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now().toString(),
+            type: "ai",
+            payload: {
+              text: "Looks like the server is not responding. Please try again later",
+            },
           },
-        },
-      ]);
+        ]);
+        setIsRequestAborted(false);
+      }
     }
   };
 
