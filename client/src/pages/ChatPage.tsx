@@ -46,7 +46,7 @@ export default function ChatPage() {
     const controller = new AbortController();
     abortControllerRef.current = controller;
 
-    const timeout = 50;
+    const timeout = 2000;
     let timeoutId;
 
     if (timeout) {
